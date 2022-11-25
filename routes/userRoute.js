@@ -1,13 +1,17 @@
 import { Router } from "express";
-import {
-  getUser,
-  userCreate,
-  userAddAdress,
-} from "../controllers/userController.js";
 
-import { isAuthenticated } from "../auth.js";
+import {
+  getSelfUser,
+  createUser,
+  updateSelfUser,
+  removeSelfUser,
+  addOrUpdateSelfUserAddress,
+} from "../controllers/userController.js";
+import { isAuthenticatedUser } from "../auth.js";
 
 export default /* User */ Router()
-  .get("/", getUser)
-  .post("/create", userCreate)
-  .post("/address", isAuthenticated, userAddAdress);
+  .get("/", isAuthenticatedUser, getSelfUser)
+  .post("/create", isAuthenticatedUser, createUser)
+  .patch("/update", isAuthenticatedUser, updateSelfUser)
+  .delete("/remove", isAuthenticatedUser, removeSelfUser)
+  .put("/address", isAuthenticatedUser, addOrUpdateSelfUserAddress);

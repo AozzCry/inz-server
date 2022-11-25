@@ -1,34 +1,46 @@
 import { Schema, model } from "mongoose";
-import { userSchema } from "./userModel";
 
 export const productSchema = new Schema({
   name: {
-    required: true,
     type: String,
+    required: true,
+    minlength: 3,
+    maxlength: 127,
   },
   price: {
-    required: true,
     type: Number,
+    required: true,
   },
   desc: {
-    required: true,
     type: String,
+    maxlength: 508,
   },
-  count: {
+  specification: {
+    type: {
+      name: { type: String, maxlength: 30 },
+      value: { type: String, maxlength: 254 },
+    },
+  },
+  quantity: {
     required: true,
     type: Number,
+    default: 0,
   },
-  creator: {
+  state: {
     required: true,
-    type: userSchema,
+    type: String,
+    enum: ["in stock", "stocked on demand", "out of stock", "discontinued"],
+    default: "out of stock",
   },
   createdDate: {
-    required: true,
     type: Date,
+    required: true,
     default: Date.now,
   },
   categories: {
-    type: Array(String),
+    type: [String],
+    uniqueitems: true,
+    maxItems: 10,
   },
 });
 

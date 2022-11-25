@@ -1,22 +1,18 @@
 import { Schema, model, ObjectId } from "mongoose";
 
-export const reviewSchema = new Schema({
+export const questionSchema = new Schema({
   text: {
     type: String,
+    required: true,
     maxLength: 508,
   },
-  stars: {
-    type: Number,
-    required: true,
-    enum: [1, 2, 3, 4, 5],
-  },
-  reviewerUsername: {
+  askingUsername: {
     type: String,
     required: true,
     minLength: 3,
     maxLength: 254,
   },
-  reviewer: {
+  askingId: {
     type: ObjectId,
     required: true,
   },
@@ -27,4 +23,4 @@ export const reviewSchema = new Schema({
   },
 });
 
-export default model("Review", reviewSchema);
+export default model("Question", questionSchema);

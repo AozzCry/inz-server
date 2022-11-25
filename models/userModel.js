@@ -1,33 +1,52 @@
 import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
-  firstname: { required: true, type: String },
-  lastname: { required: true, type: String },
-  username: {
-    required: true,
+  firstname: {
     type: String,
+    required: true,
+    minLength: 1,
+    maxLength: 254,
+  },
+  lastname: {
+    type: String,
+    required: true,
+    minLength: 1,
+    maxLength: 254,
+  },
+  username: {
+    type: String,
+    required: true,
+    minLength: 3,
+    maxLength: 254,
   },
   email: {
-    required: true,
-    unique: true,
     type: String,
-  },
-  password: { required: true, type: String },
-  registerDate: {
+    unique: true,
     required: true,
+    minLength: 3,
+    maxLength: 254,
+  },
+  password: {
+    type: String,
+    required: true,
+    minLength: 3,
+    maxLength: 127,
+  },
+  registerDate: {
     type: Date,
+    required: true,
     default: Date.now,
   },
   isAdmin: {
-    required: true,
     type: Boolean,
+    required: true,
     default: false,
   },
   address: {
-    street: String,
-    streetNr: String,
-    city: String,
-    postalCode: String,
+    street: { type: String, maxLength: 254 },
+    streetNr: { type: String, maxLength: 254 },
+    city: { type: String, maxLength: 254 },
+    postalCode: { type: String, maxLength: 254 },
   },
 });
 
