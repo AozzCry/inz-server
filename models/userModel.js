@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, ObjectId } from "mongoose";
 
 const userSchema = new Schema({
   firstname: {
@@ -23,6 +23,10 @@ const userSchema = new Schema({
     type: String,
     unique: true,
     required: true,
+    match: [
+      /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+      "Please fill a valid email address.",
+    ],
     minLength: 3,
     maxLength: 254,
   },
@@ -34,12 +38,14 @@ const userSchema = new Schema({
   },
   registerDate: {
     type: Date,
-    required: true,
     default: Date.now,
   },
   isAdmin: {
     type: Boolean,
-    required: true,
+    default: false,
+  },
+  isBanned: {
+    type: Boolean,
     default: false,
   },
   address: {
@@ -47,6 +53,11 @@ const userSchema = new Schema({
     streetNr: { type: String, maxLength: 254 },
     city: { type: String, maxLength: 254 },
     postalCode: { type: String, maxLength: 254 },
+  },
+  lastSeenProducts: {
+    type: [{ type: ObjectId }],
+    uniqueitems: true,
+    maxItems: 5,
   },
 });
 

@@ -2,16 +2,21 @@ import { Router } from "express";
 
 import {
   getSelfUser,
-  createUser,
   updateSelfUser,
-  removeSelfUser,
+  deleteSelfUser,
   addOrUpdateSelfUserAddress,
+  getAllUsers,
+  banUserByID,
+  deleteUserByID,
 } from "../controllers/userController.js";
-import { isAuthenticatedUser } from "../auth.js";
+import { isAuthenticatedUser, isAuthenticatedAdmin } from "../utils/auth.js";
 
-export default /* User */ Router()
+export default /* user */ Router()
   .get("/", isAuthenticatedUser, getSelfUser)
-  .post("/create", isAuthenticatedUser, createUser)
   .patch("/update", isAuthenticatedUser, updateSelfUser)
-  .delete("/remove", isAuthenticatedUser, removeSelfUser)
-  .put("/address", isAuthenticatedUser, addOrUpdateSelfUserAddress);
+  .delete("/delete", isAuthenticatedUser, deleteSelfUser)
+  .put("/address", isAuthenticatedUser, addOrUpdateSelfUserAddress)
+
+  .get("/getall", isAuthenticatedAdmin, getAllUsers)
+  .patch("/banbyid", isAuthenticatedAdmin, banUserByID)
+  .patch("/deletebyid", isAuthenticatedAdmin, deleteUserByID);

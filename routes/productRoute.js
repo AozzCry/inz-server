@@ -1,16 +1,19 @@
 import { Router } from "express";
-
 import {
-  getUser,
-  createUser,
-  updateUser,
-  removeUser,
-  addOrUpdateUserAdress,
-} from "../controllers/userController.js";
-import { isAuthenticatedUser, isAuthenticatedAdmin } from "../auth.js";
+  findProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getProductById,
+  getHomeProducts,
+} from "../controllers/productController.js";
+import { isAuthenticatedAdmin } from "../utils/auth.js";
 
-export default /* Product */ Router()
-  .get("/:_id", getProductById)
+export default /* product */ Router()
+  .get("/", findProducts)
+  .get("/home", getHomeProducts)
+  .get("/:nameLink", getProductById)
+
   .post("/create", isAuthenticatedAdmin, createProduct)
   .patch("/update", isAuthenticatedAdmin, updateProduct)
-  .delete("/remove", isAuthenticatedAdmin, removeProduct);
+  .patch("/delete", isAuthenticatedAdmin, deleteProduct);

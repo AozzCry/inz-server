@@ -13,19 +13,28 @@ export default function (passport) {
         passwordField: "password",
       },
       (username, password, done) => {
-        User.findOne({ email: username }, (error, user) => {
-          if (error) throw error;
-          if (!user) return done(null, false, { message: "User not found" });
-          bcrypt.compare(password, user.password, (error, result) => {
-            if (error) throw error;
-            if (result === true) {
-              return done(null, user, {
-                message: "Successfully logged in",
-              });
-            }
-            return done(null, false, { message: "Password is incorrect" });
+        username = username.toLowerCase();
+        if (
+          String(username).match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+          )
+        ) {
+          User.findOne({ email: username }, (error, user) => {
+            if (error) return done(null, false, { message: error });
+            if (!user) return done(null, false, { message: "User not found" });
+            bcrypt.compare(password, user.password, (error, result) => {
+              if (error) return done(null, false, { message: error });
+              if (result === false) {
+                return done(null, false, { message: "Password is incorrect" });
+              } else {
+                return done(null, user, { message: "Successfully logged in" });
+              }
+            });
           });
-        });
+        } else
+          return done(null, false, {
+            message: "Please fill a valid email address.",
+          });
       }
     )
   );
@@ -34,8 +43,8 @@ export default function (passport) {
   });
 
   passport.deserializeUser(function (id, done) {
-    User.findById(id, function (err, user) {
-      done(err, user);
+    User.findById(id, function (error, user) {
+      done(error, user);
     });
   });
 }

@@ -3,52 +3,58 @@ import bcrypt from "bcrypt";
 
 import User from "../models/userModel.js";
 
-export function Register(req, res) {
-  const { firstname, lastname, username, email, password } = req.body;
-  try {
-    User.findOne({ email }, async (existingUser) => {
-      if (existingUser) {
-        res.status(409).json({ message: "User already exists." });
-      } else {
-        new User({
-          firstname: firstname,
-          lastname: lastname,
-          username: username,
-          email: email,
-          password: await bcrypt.hash(password, 10),
-        }).save();
+export async function Register({ body }, res) {
+  const newUser = new User({
+    ...body,
+    email: body.email.toLowerCase(),
+    password: await bcrypt.hash(body.password, 10),
+  });
+  const error = newUser.validateSync();
+  if (error) res.status(400).json({ message: error.message });
+  else {
+    User.findOne({ email: body.email }, (error, user) => {
+      if (user)
+        res
+          .status(409)
+          .json({ message: "User with this email already exists." });
+      else {
+        newUser.save();
         res.status(201).json({ message: "Successfully created an account." });
       }
     });
-  } catch (err) {
-    res.json({ message: "Couldn't crerata an account: " + err });
   }
 }
 
 export function Login(req, res, next) {
   passport.authenticate("local", function (error, user, info) {
-    try {
-      if (!user) {
-        res.status(401).json(info);
-      } else {
-        req.login(user, function (err) {
-          res.status(200).json({ message: info.message, user: req.user });
+    if (error) res.status(400).json({ message: "Couldn't log in: " + error });
+    if (!user) res.status(400).json({ message: info.message });
+    else {
+      if (user.isBanned === true)
+        res.status(401).json({ message: "Account banned." });
+      else {
+        req.login(user, function (error) {
+          if (error) res.json({ message: "Couldn't log in: " + error });
+          else {
+            res.status(200).json({
+              message: info.message,
+              content: {
+                username: req.user.username,
+                email: req.user.email,
+                isAdmin: req.user.isAdmin,
+                userId: req.user._id,
+              },
+            });
+          }
         });
       }
-    } catch (err) {
-      res.json({
-        message: "Couldn't log in: " + err + " " + info + " " + error,
-      });
     }
   })(req, res, next);
 }
 
-export function Logout(req, res, next) {
-  req.logout(function (err) {
-    if (err) {
-      res.json({ message: "Couldn't log out: " + err });
-    } else {
-      res.status(200).json({ message: "Succesfully logged out." });
-    }
+export function Logout(req, res) {
+  req.logout(function (error) {
+    if (error) res.status(400).json({ message: "Couldn't log out: " + error });
+    else res.status(200).json({ message: "Succesfully logged out." });
   });
 }
