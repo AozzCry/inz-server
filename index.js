@@ -1,11 +1,12 @@
-import { config } from "dotenv";
 import { connect } from "mongoose";
+import { config } from "dotenv";
 import express from "express";
 import session from "express-session";
 import passport from "passport";
 import passportConfig from "./passport-config.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
 
 import authRoute from "./routes/authRoute.js";
 import userRoute from "./routes/userRoute.js";
@@ -15,6 +16,7 @@ import orderRoute from "./routes/orderRoute.js";
 import reviewRoute from "./routes/reviewRoute.js";
 import questionRoute from "./routes/questionRoute.js";
 import imageRoute from "./routes/imageRoute.js";
+import indexRoute from "./routes/indexRoute.js";
 
 config();
 
@@ -31,18 +33,22 @@ connect(
 );
 
 const app = express();
+
+app.use(morgan("dev"));
+
 app.use(express.json());
+
 app.use(
   cors({
     origin: [
       "https://localhost:3000",
       "http://localhost:3000",
-      "https://emicro.netlify.app",
-      "https://emicro-site.azurewebsites.net",
+      "https://emicro.azurewebsites.net",
     ],
     credentials: true,
   })
 );
+
 app.use(
   session({
     //name: 'sessoion',
@@ -63,7 +69,8 @@ app.use(passport.session());
 passportConfig(passport);
 
 app
-  .use("/", authRoute)
+  .use("/", indexRoute)
+  .use("/auth", authRoute)
   .use("/user", userRoute)
   .use("/product", productRoute)
   .use("/category", categoryRoute)
@@ -72,6 +79,14 @@ app
   .use("/question", questionRoute)
   .use("/image", imageRoute);
 
-app.listen(process.env.PORT, process.env.HOST, () => {
-  console.log(`Server listening on ${process.env.HOST}:${process.env.PORT}`);
+const port = normalizePort(process.env.PORT || "8080");
+function normalizePort(val) {
+  const port = parseInt(val, 10);
+  if (isNaN(port)) return val;
+  if (port >= 0) return port;
+  return false;
+}
+
+app.listen(port, () => {
+  console.log("Server listening on port: " + port);
 });
