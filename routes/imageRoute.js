@@ -6,8 +6,9 @@ import {
   getProductImages,
   saveImage,
 } from "../controllers/imageController.js";
+import { isAuthenticatedAdmin } from "../utils/auth.js";
 
 export default /* image */ Router()
   .get("/", getProductImages)
   .post("/", upload.single("image"), saveImage)
-  .patch("/", deleteImage);
+  .patch("/", isAuthenticatedAdmin, deleteImage);

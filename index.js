@@ -7,6 +7,7 @@ import passportConfig from "./passport-config.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import helmet from "helmet";
 
 import authRoute from "./routes/authRoute.js";
 import userRoute from "./routes/userRoute.js";
@@ -28,7 +29,7 @@ connect(
   },
   (error) => {
     if (error) throw error;
-    console.log("Database connection established");
+    console.log("Database connection established.");
   }
 );
 
@@ -36,30 +37,22 @@ const app = express();
 
 app.use(morgan("dev"));
 
+app.use(helmet());
+
 app.use(express.json());
 
 app.use(
   cors({
-    origin: [
-      "https://localhost:3000",
-      "http://localhost:3000",
-      "https://emicro.azurewebsites.net",
-    ],
+    origin: ["http://localhost:3000", "https://emicro.azurewebsites.net"],
     credentials: true,
   })
 );
 
 app.use(
   session({
-    //name: 'sessoion',
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {
-      //secure: true,
-      //httpOnly: true,
-      sameSite: "strict",
-    },
   })
 );
 
@@ -79,14 +72,6 @@ app
   .use("/question", questionRoute)
   .use("/image", imageRoute);
 
-const port = normalizePort(process.env.PORT || "8080");
-function normalizePort(val) {
-  const port = parseInt(val, 10);
-  if (isNaN(port)) return val;
-  if (port >= 0) return port;
-  return false;
-}
-
-app.listen(port, () => {
-  console.log("Server listening on port: " + port);
+app.listen(process.env.PORT || "8080", () => {
+  console.log("Server listening on port: " + (process.env.PORT || "8080"));
 });

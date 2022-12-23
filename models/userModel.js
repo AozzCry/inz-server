@@ -1,4 +1,4 @@
-import { Schema, model, ObjectId } from "mongoose";
+import { Schema, model } from "mongoose";
 
 const userSchema = new Schema({
   firstname: {
@@ -55,7 +55,7 @@ const userSchema = new Schema({
     postalCode: { type: String, maxLength: 254 },
   },
   lastSeenProducts: {
-    type: [{ type: ObjectId }],
+    type: [{ type: Schema.Types.ObjectId }],
     uniqueitems: true,
     maxItems: 5,
   },

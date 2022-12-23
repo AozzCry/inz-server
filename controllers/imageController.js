@@ -10,8 +10,10 @@ const __dirname = path.resolve(
   ".."
 );
 
-export function saveImage({ body, file }, res) {
-  if (
+export function saveImage({ body, file, user }, res) {
+  if (user && user.role !== "admin")
+    res.status(401).json({ message: "Not an admin." });
+  else if (
     ["image/jpg", "image/png", "image/jpeg"].includes(file.mimetype) &&
     file.size < 12000000
   ) {
@@ -32,10 +34,11 @@ export function saveImage({ body, file }, res) {
         }
       });
     }
-  } else
+  } else {
     res
       .status(400)
       .json({ message: "Only jpg and png images are allowed. Max size 12MB" });
+  }
   unlinkSync(__dirname + "/uploads/" + file.filename);
 }
 export function getProductImages({ query: { productId } }, res) {
@@ -56,7 +59,7 @@ export function deleteImage({ body: { imageId } }, res) {
   if (typeof imageId === "string")
     Image.deleteOne({ _id: imageId }, (error) => {
       if (error) res.status(400).send({ message: error.message });
-      else res.status(200).send({ message: "Images deleted." });
+      else res.status(200).send({ message: "Image deleted." });
     });
   else res.status(400).send({ message: "Product id wrong type or empty." });
 }

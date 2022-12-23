@@ -1,5 +1,4 @@
 import { Schema, model } from "mongoose";
-import { reviewSchema } from "./reviewModel.js";
 
 export const productSchema = new Schema({
   name: {

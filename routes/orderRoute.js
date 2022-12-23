@@ -3,7 +3,6 @@ import { Router } from "express";
 import {
   getSelfOrders,
   getAllOrders,
-  getOrdersById,
   createOrder,
   changeOrderStatus,
   deleteOrder,
@@ -16,6 +15,5 @@ export default /* order */ Router()
   .patch("/status", isAuthenticatedUser, changeOrderStatus)
 
   .get("/getall", isAuthenticatedAdmin, getAllOrders)
-  .get("/getbyid", isAuthenticatedAdmin, getOrdersById)
   .patch("/status", isAuthenticatedAdmin, changeOrderStatus)
   .patch("/delete", isAuthenticatedAdmin, deleteOrder);

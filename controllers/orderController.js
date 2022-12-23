@@ -61,10 +61,7 @@ export function createOrder({ body }, res) {
                   message: "Error saving order: " + error,
                 });
               else {
-                res.status(201).json({
-                  message: "Order created.",
-                });
-                newOrder.products.map(({ productId, count }) => {
+                for (const { productId, count } of newOrder.products) {
                   Product.findById(productId, (error, foundProduct) => {
                     foundProduct.quantity = foundProduct.quantity - count;
                     foundProduct.timesBought = foundProduct.timesBought + count;
@@ -72,6 +69,9 @@ export function createOrder({ body }, res) {
                       foundProduct.status = "out of stock";
                     foundProduct.save();
                   });
+                }
+                res.status(201).json({
+                  message: "Order created.",
                 });
               }
             });
@@ -103,8 +103,6 @@ export function changeOrderStatus({ body: { orderId, status } }, res) {
       }
     });
 }
-
-export function getOrdersById(req, res) {}
 
 export function deleteOrder({ body: { orderId } }, res) {
   if (typeof orderId !== "string")
