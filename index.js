@@ -43,7 +43,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://emicro.azurewebsites.net"],
+    origin: ["https://emicro.azurewebsites.net"],
     credentials: true,
   })
 );

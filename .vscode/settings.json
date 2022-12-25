@@ -1,4 +1,5 @@
 {
   "appService.defaultWebAppToDeploy": "/subscriptions/c25aa96e-2de9-413d-be65-eab938154a1b/AppServices/subscriptions/c25aa96e-2de9-413d-be65-eab938154a1b/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/emicro-api",
-  "appService.deploySubpath": "."
+  "appService.deploySubpath": ".",
+  "appService.zipIgnorePattern": ["node_modules{,/**}", ".vscode{,/**}"]
 }
