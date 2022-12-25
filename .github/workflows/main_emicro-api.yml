@@ -52,5 +52,5 @@ jobs:
         with:
           app-name: 'emicro-api'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_63B4D05DA4B947BEAEF4FB551D57BD14 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_87E69AD3A73E481E87865E628DAFE9BF }}
           package: .
