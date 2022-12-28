@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+import { Buffer } from "buffer";
 
 export const productSchema = new Schema({
   name: {
@@ -33,6 +34,11 @@ export const productSchema = new Schema({
       value: { type: String, maxlength: 254 },
     },
   ],
+  categories: {
+    type: [{ type: String, maxlength: 30 }],
+    uniqueitems: true,
+    maxItems: 5,
+  },
   quantity: {
     required: true,
     type: Number,
@@ -48,11 +54,6 @@ export const productSchema = new Schema({
     type: Date,
     required: true,
     default: Date.now,
-  },
-  categories: {
-    type: [{ type: String, maxlength: 30 }],
-    uniqueitems: true,
-    maxItems: 5,
   },
   timesBought: {
     required: true,
