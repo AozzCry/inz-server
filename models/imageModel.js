@@ -1,6 +1,7 @@
-import { Schema, model, ObjectId } from "mongoose";
+import { Schema, model } from "mongoose";
+import { Buffer } from "buffer";
 export const imageSchema = new Schema({
-  productId: ObjectId,
+  productId: Schema.Types.ObjectId,
   img: Buffer,
 });
 export default new model("Image", imageSchema);

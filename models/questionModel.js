@@ -16,15 +16,15 @@ export const answerSchema = new Schema({
     required: true,
     maxLength: 508,
   },
-  addedDate: {
-    type: Date,
-    default: Date.now,
-  },
   usersThatLiked: {
     type: [Schema.Types.ObjectId],
   },
   usersThatDisliked: {
     type: [Schema.Types.ObjectId],
+  },
+  addedDate: {
+    type: Date,
+    default: Date.now,
   },
 });
 
@@ -48,10 +48,6 @@ export const questionSchema = new Schema({
     type: Schema.Types.ObjectId,
     required: true,
   },
-  addedDate: {
-    type: Date,
-    default: Date.now,
-  },
   usersThatLiked: {
     type: [Schema.Types.ObjectId],
   },
@@ -60,6 +56,10 @@ export const questionSchema = new Schema({
   },
   answers: {
     type: [answerSchema],
+  },
+  addedDate: {
+    type: Date,
+    default: Date.now,
   },
 });
 
