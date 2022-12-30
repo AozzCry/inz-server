@@ -19,7 +19,7 @@ export function saveImage({ body, file, user }, res) {
   ) {
     const newImage = new Image({
       productId: body.productId,
-      img: readFileSync(path.join(__dirname + "/uploads/" + file.filename)),
+      img: readFileSync(path.join(__dirname + "/" + file.filename)),
     });
     const error = newImage.validateSync();
     if (error) res.status(400).json({ message: error.message });
@@ -39,7 +39,7 @@ export function saveImage({ body, file, user }, res) {
       .status(400)
       .json({ message: "Only jpg and png images are allowed. Max size 12MB" });
   }
-  unlinkSync(__dirname + "/uploads/" + file.filename);
+  unlinkSync(__dirname + "/" + file.filename);
 }
 export function getProductImages({ query: { productId } }, res) {
   if (typeof productId === "string")
