@@ -22,6 +22,8 @@ export default function (passport) {
           User.findOne({ email: username }, (error, user) => {
             if (error) return done(null, false, { message: error });
             if (!user) return done(null, false, { message: "User not found" });
+            if (user.isBanned)
+              return done(null, false, { message: "User is banned" });
             bcrypt.compare(password, user.password, (error, result) => {
               if (error) return done(null, false, { message: error });
               if (result === false) {

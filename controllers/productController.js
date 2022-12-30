@@ -25,9 +25,7 @@ export function findProducts({ query }, res) {
         });
     } else if (query.name) {
       Product.find(
-        {
-          $text: { $search: query.name },
-        },
+        { $text: { $search: query.name } },
         { score: { $meta: "textScore" } }
       )
         .sort({ score: { $meta: "textScore" } })

@@ -115,6 +115,7 @@ export function deleteReview({ body, user }, res) {
           Product.findById(review.productId, (error, product) => {
             product.countOfReviews = product.countOfReviews - 1;
             product.starsFromReviews = product.starsFromReviews - review.stars;
+            product.save();
             review.remove();
             review.save();
             res.status(200).json({ message: "Review has been deleted" });
