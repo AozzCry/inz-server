@@ -43,7 +43,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["https://emicro.azurewebsites.net"],
+    origin: ["https://localhost:3000"],
     credentials: true,
   })
 );
@@ -74,6 +74,6 @@ app
   .use("/question", questionRoute)
   .use("/image", imageRoute);
 
-app.listen(process.env.PORT || "8080", () => {
+app.listen(process.env.PORT || 8080, () => {
   console.log("Server listening on port: " + (process.env.PORT || "8080"));
 });
