@@ -6,17 +6,17 @@ import {
   deleteSelfUser,
   addOrUpdateSelfUserAddress,
   getAllUsers,
-  banUserByID,
-  deleteUserByID,
+  banUserById,
+  deleteUserById,
 } from "../controllers/userController.js";
 import { isAuthenticatedUser, isAuthenticatedAdmin } from "../utils/auth.js";
 
 export default /* user */ Router()
   .get("/", isAuthenticatedUser, getSelfUser)
   .patch("/update", isAuthenticatedUser, updateSelfUser)
-  .delete("/delete", isAuthenticatedUser, deleteSelfUser)
+  .delete("/self/", isAuthenticatedUser, deleteSelfUser)
   .put("/address", isAuthenticatedUser, addOrUpdateSelfUserAddress)
 
   .get("/getall", isAuthenticatedAdmin, getAllUsers)
-  .patch("/banbyid", isAuthenticatedAdmin, banUserByID)
-  .patch("/deletebyid", isAuthenticatedAdmin, deleteUserByID);
+  .patch("/ban/:_id", isAuthenticatedAdmin, banUserById)
+  .delete("/:_id", isAuthenticatedAdmin, deleteUserById);

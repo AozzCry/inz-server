@@ -43,7 +43,7 @@ app.use(express.json());
 
 app.use(
   cors({
-    origin: ["https://localhost:3000"],
+    origin: ["https://emicro.azurewebsites.net"],
     credentials: true,
   })
 );
@@ -54,10 +54,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     proxy: true,
-    cookie: { sameSite: "none", secure: true },
+    cookie: { sameSite: "none", secure: true, httpOnly: true },
   })
 );
-
 app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());

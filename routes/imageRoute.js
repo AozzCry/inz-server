@@ -5,10 +5,12 @@ import {
   deleteImage,
   getProductImages,
   saveImage,
+  saveMiniImage,
 } from "../controllers/imageController.js";
 import { isAuthenticatedAdmin } from "../utils/auth.js";
 
 export default /* image */ Router()
   .get("/", getProductImages)
-  .post("/", upload.single("image"), saveImage)
-  .patch("/", isAuthenticatedAdmin, deleteImage);
+  .post("/full", upload.single("image"), saveImage)
+  .post("/mini", upload.single("image"), saveMiniImage)
+  .delete("/:_id", isAuthenticatedAdmin, deleteImage);

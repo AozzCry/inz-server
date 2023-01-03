@@ -2,7 +2,6 @@ import Review from "../models/reviewModel.js";
 import Product from "../models/productModel.js";
 import Order from "../models/orderModel.js";
 
-// User authenticated
 export function getProductReviews({ body: { productId } }, res) {
   if (typeof productId === "string")
     Review.find({ productId: productId }, (error, reviews) => {
@@ -10,9 +9,9 @@ export function getProductReviews({ body: { productId } }, res) {
     });
   else res.status(400).json({ message: "Product id is empty or wrong type" });
 }
-export function likeReview({ body: { reviewId }, user }, res) {
-  if (typeof reviewId === "string")
-    Review.findById(reviewId, async (error, review) => {
+export function likeReview({ body: { _id }, user }, res) {
+  if (typeof _id === "string")
+    Review.findById(_id, async (error, review) => {
       if (!review) res.status(404).json({ message: "Review doesn't exist." });
       else {
         let index = 0;
@@ -34,9 +33,9 @@ export function likeReview({ body: { reviewId }, user }, res) {
     });
   else res.status(400).json({ message: "Review id is empty or wrong type" });
 }
-export function dislikeReview({ body: { reviewId }, user }, res) {
-  if (typeof reviewId === "string")
-    Review.findById(reviewId, async (error, review) => {
+export function dislikeReview({ body: { _id }, user }, res) {
+  if (typeof _id === "string")
+    Review.findById(_id, async (error, review) => {
       if (!review) res.status(404).json({ message: "Review doesn't exist." });
       else {
         let index = 0;
@@ -103,20 +102,17 @@ export function createReview({ body, user }, res) {
     );
 }
 
-// Admin authenticated
-export function deleteReview({ body, user }, res) {
-  if (typeof body.id === "string") {
-    Review.findOne({ _id: body.id }, function (error, review) {
-      if (error) res.json({ message: "Couldn't delete review: " + error });
-      else if (!review)
-        res.status(404).json({ message: "Review doesn't exists." });
+export function deleteReview({ params: { _id }, user }, res) {
+  if (typeof _id === "string") {
+    Review.findById(_id, function (error, review) {
+      if (!review) res.status(404).json({ message: "Review doesn't exists." });
       else {
         if (user.isAdmin === true || user._id.equals(review.userId)) {
           Product.findById(review.productId, (error, product) => {
             product.countOfReviews = product.countOfReviews - 1;
             product.starsFromReviews = product.starsFromReviews - review.stars;
+            product.save();
             review.remove();
-            review.save();
             res.status(200).json({ message: "Review has been deleted" });
           });
         }

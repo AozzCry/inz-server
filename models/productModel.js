@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
 import { Buffer } from "buffer";
+import { log } from "console";
 
 export const productSchema = new Schema({
   name: {
@@ -8,13 +9,6 @@ export const productSchema = new Schema({
     required: true,
     minlength: 3,
     maxlength: 127,
-  },
-  nameLink: {
-    type: String,
-    unique: true,
-    required: true,
-    minlength: 3,
-    maxlength: 1012,
   },
   price: {
     type: Number,
@@ -72,6 +66,11 @@ export const productSchema = new Schema({
   },
   miniImg: {
     type: Buffer,
+  },
+  nameLink: {
+    type: String,
+    unique: true,
+    required: true,
   },
 });
 productSchema.index({ name: "text" });

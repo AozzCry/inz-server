@@ -14,9 +14,7 @@ export function createOrder({ body }, res) {
   if (error) res.status(400).json({ message: error.message });
   else {
     User.findById(newOrder.userId, async (error, user) => {
-      if (error)
-        res.status(400).json({ message: "Couldn't get user: " + error });
-      else if (!user) res.status(404).json({ message: "User not found." });
+      if (!user) res.status(404).json({ message: "User not found." });
       else {
         if (
           user.firstname !== newOrder.userInfo.firstname ||
@@ -37,7 +35,13 @@ export function createOrder({ body }, res) {
                 else if (product.status !== "in stock")
                   errors.push(product.name + " not in stock.");
                 else if (product.quantity < count)
-                  errors.push("Not enough " + product.name + " in stock.");
+                  errors.push(
+                    "Not enough " +
+                      product.name +
+                      " in stock.(available: " +
+                      product.quantity +
+                      ")"
+                  );
                 else sum = sum + product.price * count;
               });
           }
@@ -104,11 +108,11 @@ export function changeOrderStatus({ body: { orderId, status } }, res) {
     });
 }
 
-export function deleteOrder({ body: { orderId } }, res) {
-  if (typeof orderId !== "string")
+export function deleteOrder({ params: { _id } }, res) {
+  if (typeof _id !== "string")
     res.status(400).send({ message: "Order Id is required." });
   else
-    Order.findByIdAndDelete(orderId, (error, order) => {
+    Order.findByIdAndDelete(_id, (error, order) => {
       if (!order)
         res.status(404).send({ message: "Order with given id doesn't exist." });
       else
@@ -117,8 +121,8 @@ export function deleteOrder({ body: { orderId } }, res) {
           : res.status(200).send({ message: "Order succesfully deleted." });
     });
 }
-export function getAllOrders({ body: { userId } }, res) {
-  Order.find(userId ? { userId: userId } : {}, (error, orders) => {
+export function getAllOrders(req, res) {
+  Order.find((error, orders) => {
     res.status(200).json(orders);
   });
 }

@@ -16,12 +16,12 @@ export default /* question */ Router()
   .post("/create", isAuthenticatedUser, createQuestion)
   .patch("/like", isAuthenticatedUser, likeQuestion)
   .patch("/dislike", isAuthenticatedUser, dislikeQuestion)
-  .patch("/delete", isAuthenticatedUser, deleteQuestion)
+  .delete("/:_id", isAuthenticatedUser, deleteQuestion)
 
-  .patch("/answer", isAuthenticatedUser, answerQuestion)
+  .post("/answer", isAuthenticatedUser, answerQuestion)
   .patch("/answer/like", isAuthenticatedUser, likeAnswer)
   .patch("/answer/dislike", isAuthenticatedUser, dislikeAnswer)
   .patch("/answer/delete", isAuthenticatedUser, deleteAnswer)
 
-  .patch("/delete", isAuthenticatedAdmin, deleteQuestion)
+  .delete("/:_id", isAuthenticatedAdmin, deleteQuestion)
   .patch("/answer/delete", isAuthenticatedAdmin, deleteAnswer);

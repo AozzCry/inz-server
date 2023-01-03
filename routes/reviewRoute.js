@@ -14,6 +14,6 @@ export default /* review */ Router()
   .post("/create", isAuthenticatedUser, createReview)
   .patch("/like", isAuthenticatedUser, likeReview)
   .patch("/dislike", isAuthenticatedUser, dislikeReview)
-  .patch("/delete", isAuthenticatedUser, deleteReview)
+  .delete("/:_id", isAuthenticatedUser, deleteReview)
 
-  .patch("/delete", isAuthenticatedAdmin, deleteReview);
+  .delete("/:_id", isAuthenticatedAdmin, deleteReview);

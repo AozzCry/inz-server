@@ -30,10 +30,9 @@ export function updateSelfUser(req, res) {
     res.status(201).json({ message: "User modified." });
   }
 }
-export function deleteSelfUser(req, res) {
-  User.deleteOne(req.user, (error) => {
-    if (error) res.json({ message: "Couldn't delete user: " + error });
-    else res.status(204).json({ message: "User deleted." });
+export function deleteSelfUser({ user }, res) {
+  User.findByIdAndDelete(user._id, (error) => {
+    res.status(204).json({ message: "Your account has been deleted." });
   });
 }
 export function addOrUpdateSelfUserAddress(req, res) {
@@ -63,32 +62,34 @@ export function getAllUsers(req, res) {
   );
 }
 
-export function banUserByID(req, res) {
-  if (req.body.id) {
-    User.findById(req.body.id, (error, user) => {
-      if (error) res.json({ message: "Couldn't remove user: " + error });
-      else if (!user) res.status(404).json({ message: "User doesn-t exist" });
-      else if (user.email === req.user.email)
-        res.status(400).json({ message: "You can't ban yourself." });
-      else {
-        user.isBanned = !user.isBanned;
-        user.save();
-        res.status(200).json({ message: "User banned." });
-      }
-    });
-  } else res.status(400).json({ message: "User id required." });
+export function banUserById({ params: { _id }, user }, res) {
+  if (typeof _id === "string") {
+    if (user._id.equals(_id))
+      res.status(400).json({ message: "You can't ban yourself." });
+    else
+      User.findById(_id, (error, user) => {
+        if (!user) res.status(404).json({ message: "User doesn't exist" });
+        else {
+          user.isBanned = !user.isBanned;
+          user.save();
+          res.status(200).json({
+            message: user.isBanned ? "User banned" : "User unbanned.",
+          });
+        }
+      });
+  } else res.status(400).json({ message: "User id missing or wrong type." });
 }
-export function deleteUserByID(req, res) {
-  if (req.body.id) {
-    User.findById(req.body.id, (error, user) => {
-      if (error) res.json({ message: "Couldn't delete user: " + error });
-      else if (!user) res.status(404).json({ message: "User doesn't exist" });
-      else if (user.email === req.user.email)
-        res.status(400).json({ message: "You can't delete yourself." });
-      else {
-        user.deleteOne();
-        res.status(200).json({ message: "User deleted." });
-      }
-    });
+export function deleteUserById({ params: { _id }, user }, res) {
+  if (typeof _id === "string") {
+    if (user._id.equals(_id))
+      res.status(400).json({ message: "You can't delete yourself." });
+    else
+      User.findById(_id, (error, user) => {
+        if (!user) res.status(404).json({ message: "User doesn't exist" });
+        else {
+          user.deleteOne();
+          res.status(200).json({ message: "User deleted." });
+        }
+      });
   } else res.status(400).json({ message: "User id required." });
 }
