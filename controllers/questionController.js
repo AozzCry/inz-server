@@ -1,9 +1,9 @@
 import Question from "../models/questionModel.js";
 import Product from "../models/productModel.js";
 
-export function likeQuestion({ body: { questionId }, user }, res) {
-  if (typeof questionId === "string") {
-    Question.findById(questionId, async (error, question) => {
+export function likeQuestion({ body: { _id }, user }, res) {
+  if (typeof _id === "string") {
+    Question.findById(_id, async (error, question) => {
       if (!question)
         res.status(404).json({ message: "Question doesn't exist." });
       else {
@@ -27,9 +27,9 @@ export function likeQuestion({ body: { questionId }, user }, res) {
   } else
     res.status(400).json({ message: "Question id is empty or wrong type." });
 }
-export function dislikeQuestion({ body: { questionId }, user }, res) {
-  if (typeof questionId === "string") {
-    Question.findById(questionId, async (error, question) => {
+export function dislikeQuestion({ body: { _id }, user }, res) {
+  if (typeof _id === "string") {
+    Question.findById(_id, async (error, question) => {
       if (!question)
         res.status(404).json({ message: "Question doesn't exist." });
       else {
@@ -91,14 +91,14 @@ export function answerQuestion({ body, user }, res) {
     });
   else res.status(400).json({ message: "Wrong type or empty." });
 }
-export function likeAnswer({ body: { questionId, answerId }, user }, res) {
-  if (typeof questionId === "string" && typeof answerId === "string") {
-    Question.findById(questionId, async (error, question) => {
+export function likeAnswer({ body: { _id, secondId }, user }, res) {
+  if (typeof _id === "string" && typeof secondId === "string") {
+    Question.findById(_id, async (error, question) => {
       if (!question)
         res.status(404).json({ message: "Question doesn't exist." });
       else {
         const answer = await question.answers.find(
-          (e) => answerId === e._id.toString()
+          (e) => secondId === e._id.toString()
         );
         let index = 0;
         for await (const userId of answer.usersThatLiked) {
@@ -121,14 +121,14 @@ export function likeAnswer({ body: { questionId, answerId }, user }, res) {
     res.status(400).json({ message: "Question id is empty or wrong type." });
 }
 
-export function dislikeAnswer({ body: { questionId, answerId }, user }, res) {
-  if (typeof questionId === "string" && typeof answerId === "string") {
-    Question.findById(questionId, async (error, question) => {
+export function dislikeAnswer({ body: { _id, secondId }, user }, res) {
+  if (typeof _id === "string" && typeof secondId === "string") {
+    Question.findById(_id, async (error, question) => {
       if (!question)
         res.status(404).json({ message: "Question doesn't exist." });
       else {
         const answer = await question.answers.find(
-          (e) => answerId === e._id.toString()
+          (a) => secondId === a._id.toString()
         );
         let index = 0;
         for await (const userId of answer.usersThatDisliked) {
@@ -137,14 +137,14 @@ export function dislikeAnswer({ body: { questionId, answerId }, user }, res) {
             question.save();
             return res
               .status(200)
-              .json({ message: "Succesfully unliked answer." });
+              .json({ message: "Succesfully undisliked answer." });
           }
           index += 1;
         }
 
         answer.usersThatDisliked.push(user._id);
         question.save();
-        res.status(200).json({ message: "Succesfully liked answer." });
+        res.status(200).json({ message: "Succesfully disliked answer." });
       }
     });
   } else
@@ -170,9 +170,9 @@ export function deleteAnswer({ body: { questionId, answerId }, user }, res) {
     res.status(400).json({ message: "Question id is empty of wrong type." });
   }
 }
-export function deleteQuestion({ body: { id }, user }, res) {
-  if (typeof id === "string") {
-    Question.findOneAndDelete({ _id: id }, function (error, question) {
+export function deleteQuestion({ params: { _id }, user }, res) {
+  if (typeof _id === "string") {
+    Question.findOneAndDelete({ _id }, function (error, question) {
       if (!question)
         res.status(404).json({ message: "Question doesn't exists." });
       else {

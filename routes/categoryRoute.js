@@ -11,4 +11,4 @@ export default /* category */ Router()
   .get("/", getAllCategories)
 
   .post("/create", isAuthenticatedAdmin, createCategory)
-  .patch("/delete", isAuthenticatedAdmin, deleteCategory);
+  .delete("/:name", isAuthenticatedAdmin, deleteCategory);

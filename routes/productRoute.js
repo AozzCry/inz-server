@@ -1,10 +1,9 @@
 import { Router } from "express";
 import {
   findProducts,
-  createProduct,
-  updateProduct,
+  addOrUpdateProduct,
   deleteProduct,
-  getProductById,
+  getProductByLink,
   getHomeProducts,
 } from "../controllers/productController.js";
 import { isAuthenticatedAdmin } from "../utils/auth.js";
@@ -12,8 +11,7 @@ import { isAuthenticatedAdmin } from "../utils/auth.js";
 export default /* product */ Router()
   .get("/", findProducts)
   .get("/home", getHomeProducts)
-  .get("/:nameLink", getProductById)
+  .get("/:nameLink", getProductByLink)
 
-  .post("/create", isAuthenticatedAdmin, createProduct)
-  .patch("/update", isAuthenticatedAdmin, updateProduct)
-  .patch("/delete", isAuthenticatedAdmin, deleteProduct);
+  .put("/addorupdate", isAuthenticatedAdmin, addOrUpdateProduct)
+  .delete("/:_id", isAuthenticatedAdmin, deleteProduct);

@@ -22,18 +22,14 @@ export function createCategory(req, res) {
     }
   });
 }
-export function deleteCategory(req, res) {
-  if (typeof req.body.name === "string") {
-    Category.findOneAndDelete(
-      { name: req.body.name },
-      function (error, category) {
-        if (error) res.json({ message: "Couldn't delete category: " + error });
-        else if (!category)
-          res.status(404).json({ message: "Category doesn't exists." });
-        else res.status(200).json({ message: "Category deleted." });
-      }
-    );
+export function deleteCategory({ params: { name } }, res) {
+  if (typeof name === "string") {
+    Category.findOneAndDelete({ name }, function (error, category) {
+      if (!category)
+        res.status(404).json({ message: "Category doesn't exists." });
+      else res.status(200).json({ message: "Category has been deleted." });
+    });
   } else {
-    res.status(400).json({ message: "Error: name is empty of wrong type" });
+    res.status(400).json({ message: "Name is empty of wrong type" });
   }
 }

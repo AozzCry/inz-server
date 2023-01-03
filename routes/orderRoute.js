@@ -16,4 +16,4 @@ export default /* order */ Router()
 
   .get("/getall", isAuthenticatedAdmin, getAllOrders)
   .patch("/status", isAuthenticatedAdmin, changeOrderStatus)
-  .patch("/delete", isAuthenticatedAdmin, deleteOrder);
+  .delete("/:_id", isAuthenticatedAdmin, deleteOrder);
