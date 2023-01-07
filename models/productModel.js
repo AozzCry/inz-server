@@ -1,6 +1,5 @@
 import { Schema, model } from "mongoose";
 import { Buffer } from "buffer";
-import { log } from "console";
 
 export const productSchema = new Schema({
   name: {

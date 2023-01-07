@@ -4,9 +4,9 @@ export const orderSchema = new Schema({
   products: {
     type: [
       {
+        productId: { required: true, type: Schema.Types.ObjectId },
         productName: { required: true, type: String },
         productPrice: { required: true, type: Number, min: 0.01 },
-        productId: { required: true, type: Schema.Types.ObjectId },
         productNameLink: { required: true, type: String },
         count: { required: true, type: Number, min: 1, default: 1 },
       },

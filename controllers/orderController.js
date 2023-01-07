@@ -45,18 +45,13 @@ export function createOrder({ body }, res) {
                 else sum = sum + product.price * count;
               });
           }
-          if (errors.length)
-            res.status(400).json({
-              message: errors,
-            });
+          if (errors) res.status(400).json({ message: errors });
           else if (sum < 0.01)
             res.status(400).json({
               message: "Error in finding products.",
             });
           else if (sum.toFixed(2) !== newOrder.sumPrice.toFixed(2))
-            res.status(400).json({
-              message: "Product price outdated.",
-            });
+            res.status(400).json({ message: "Product price outdated." });
           else {
             newOrder.status = "awaiting payment";
             newOrder.save((error) => {
@@ -74,9 +69,7 @@ export function createOrder({ body }, res) {
                     foundProduct.save();
                   });
                 }
-                res.status(201).json({
-                  message: "Order created.",
-                });
+                res.status(201).json({ message: "Order created." });
               }
             });
           }

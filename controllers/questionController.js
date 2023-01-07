@@ -81,7 +81,7 @@ export function answerQuestion({ body, user }, res) {
       else {
         const newAnswer = {
           userId: user._id,
-          userUsername: user.username,
+          userUsername: user.username + (user.isAdmin ? " (admin)" : ""),
           text: body.text,
         };
         question.answers.push(newAnswer);

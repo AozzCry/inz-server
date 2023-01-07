@@ -91,26 +91,31 @@ export function getProductByLink({ params: { nameLink }, user }, res) {
   } else res.status(400).json({ message: "Product id required." });
 }
 export function getHomeProducts({ user }, res) {
-  Product.count((error, count) => {
-    Product.find()
-      .sort({ _id: -1 })
-      .limit(5)
-      .exec((error, randomProducts) => {
-        if (user) {
-          Product.find(
-            { _id: { $in: user.lastSeenProducts } },
-            (error, userProduct) => {
-              res.status(200).json({
-                lastSeenProducts: userProduct,
-                randomFiveProducts: randomProducts,
-              });
-            }
-          );
-        } else {
-          res.status(200).json({ randomFiveProducts: randomProducts });
-        }
-      });
-  });
+  Product.find()
+    .sort({ _id: -1 })
+    .limit(5)
+    .exec((error, randomProducts) => {
+      if (user) {
+        Product.find(
+          { _id: { $in: user.lastSeenProducts } },
+          (error, userProduct) => {
+            res.status(200).json({
+              lastSeenProducts: userProduct,
+              randomFiveProducts: randomProducts,
+            });
+          }
+        );
+      } else {
+        res.status(200).json({ randomFiveProducts: randomProducts });
+      }
+    });
+}
+export function getCartProducts({ query }, res) {
+  Product.find({ categories: { $in: query.category.split(",") } })
+    .limit(5)
+    .exec((error, products) => {
+      res.status(201).json(products);
+    });
 }
 export function addOrUpdateProduct({ body }, res) {
   const newProduct = new Product(body.product);
