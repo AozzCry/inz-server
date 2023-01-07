@@ -36,15 +36,7 @@ export function Login(req, res, next) {
         req.login(user, function (error) {
           if (error) res.json({ message: "Couldn't log in: " + error });
           else {
-            res.status(200).json({
-              message: info.message,
-              content: {
-                username: req.user.username,
-                email: req.user.email,
-                isAdmin: req.user.isAdmin,
-                userId: req.user._id,
-              },
-            });
+            res.status(200).json({ message: info.message });
           }
         });
       }
@@ -57,4 +49,19 @@ export function Logout(req, res) {
     if (error) res.status(400).json({ message: "Couldn't log out: " + error });
     else res.status(200).json({ message: "Succesfully logged out." });
   });
+}
+
+export function refreshSession(req, res) {
+  if (req.isAuthenticated()) {
+    res.status(200).json({
+      username: req.user.username,
+      email: req.user.email,
+      isAdmin: req.user.isAdmin,
+      userId: req.user._id,
+    });
+  } else {
+    res
+      .status(204)
+      .json({ username: null, email: null, isAdmin: null, userId: null });
+  }
 }

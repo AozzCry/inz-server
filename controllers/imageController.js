@@ -65,7 +65,7 @@ export async function saveMiniImage({ body: { productId }, file, user }, res) {
 }
 
 export function getProductImages({ query: { productId } }, res) {
-  if (typeof productId === "string")
+  if (typeof productId === "string") {
     Image.find({ productId: productId }, (error, images) => {
       let sendableImages = [];
       for (const image of images) {
@@ -75,7 +75,7 @@ export function getProductImages({ query: { productId } }, res) {
       }
       res.status(200).send(sendableImages);
     });
-  else res.status(400).send({ message: "Product id wrong type or empty." });
+  } else res.status(400).send({ message: "Product id wrong type or empty." });
 }
 
 export function deleteImage({ params: { _id } }, res) {
