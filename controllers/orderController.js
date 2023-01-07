@@ -45,7 +45,7 @@ export function createOrder({ body }, res) {
                 else sum = sum + product.price * count;
               });
           }
-          if (errors) res.status(400).json({ message: errors });
+          if (errors.length > 0) res.status(400).json({ message: errors });
           else if (sum < 0.01)
             res.status(400).json({
               message: "Error in finding products.",
